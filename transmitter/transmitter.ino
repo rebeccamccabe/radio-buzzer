@@ -35,6 +35,9 @@ void setup()
     pinMode(led, OUTPUT);
     pinMode(button, INPUT);
     pinMode(pot, INPUT);
+
+    // Disable USB
+    Serial.end();
 }
 
 void loop()
