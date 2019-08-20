@@ -10,11 +10,11 @@
 
 #include <VirtualWire.h>
 int buzzer=10;
+int led = 13;
+
 void setup()
 {
-    Serial.begin(9600);	// Debugging only
-    Serial.println("setup");
-    pinMode(13,OUTPUT);
+    pinMode(led,OUTPUT);
     pinMode(buzzer,OUTPUT);
     analogWrite(buzzer,LOW);
     // Initialise the IO and ISR
@@ -28,32 +28,24 @@ void loop()
     uint8_t buf[VW_MAX_MESSAGE_LEN];
     uint8_t buflen = VW_MAX_MESSAGE_LEN;
 
-    analogWrite(buzzer,LOW);
-
     if (vw_get_message(buf, &buflen)) // Non-blocking
     {
       	int i;
         char word[100];
-        digitalWrite(13, true); // Flash a light to show received good message
+        digitalWrite(led, true); // Flash a light to show received good message
         
-	// Message with a good checksum received, dump it.
-	Serial.print("Got: ");
-	
-	for (i = 0; i < buflen; i++)
-	{
-	    Serial.print(buf[i], HEX);
-     word[i] = toascii(buf[i]);
-	    Serial.print(" ");
-	}
- Serial.println(word);
- Serial.println("");
- 
- int vol = atoi(word);
- analogWrite(buzzer, vol);
- delay(200);
-	
-        digitalWrite(13, false);
+    	// Message with a good checksum received, dump it.
+    	
+    	for (i = 0; i < buflen; i++)
+    	{
+            word[i] = toascii(buf[i]);
+    	}
+         
+         int vol = atoi(word);
+         analogWrite(buzzer, vol);
+         delay(200);
+    	
+        digitalWrite(led, false);
         analogWrite(buzzer,0);
     }
-
 }
